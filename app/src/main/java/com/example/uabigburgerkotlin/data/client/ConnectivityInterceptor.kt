@@ -27,9 +27,8 @@ class ConnectivityInterceptor(private val context: Context) : Interceptor {
             lateinit var connectivityManager: ConnectivityManager
             connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-            var isConnected = false
             val activeNetwork = connectivityManager.activeNetworkInfo
-            isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+            var isConnected = activeNetwork != null && activeNetwork.isConnected
 
 
             return isConnected

@@ -1,4 +1,8 @@
 package com.example.uabigburgerkotlin.module.productdetails
 
-interface ProductDetailsView {
+import com.example.uabigburgerkotlin.module.base.BaseView
+
+interface ProductDetailsView : BaseView {
+    fun onProductAdded()
+    fun onRemoveSuccess()
 }

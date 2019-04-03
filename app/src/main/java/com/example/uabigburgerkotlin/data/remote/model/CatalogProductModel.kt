@@ -1,4 +1,10 @@
 package com.example.uabigburgerkotlin.data.remote.model
 
-class CatalogProductModel {
-}
+
+data class CatalogProductModel(
+    val ref: String,
+    val title: String?,
+    val description: String?,
+    val thumbnail: String?,
+    val price: Float
+)

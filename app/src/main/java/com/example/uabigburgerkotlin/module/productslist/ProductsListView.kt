@@ -1,4 +1,9 @@
 package com.example.uabigburgerkotlin.module.productslist
 
-interface ProductsListView {
+import com.example.uabigburgerkotlin.data.remote.dto.ECatalogProduct
+import com.example.uabigburgerkotlin.module.base.BaseView
+
+interface ProductsListView : BaseView {
+    fun onFetchCatalogProducts(catalogProducts: MutableList<ECatalogProduct>)
+    fun onFetchCatalogProductsFailed()
 }

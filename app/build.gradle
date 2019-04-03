@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
@@ -51,7 +53,7 @@ dependencies {
     // Room
     implementation "android.arch.persistence.room:runtime:$project.ext.roomVersion"
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
-    annotationProcessor "android.arch.persistence.room:compiler:$project.ext.roomVersion"
+    kapt "android.arch.persistence.room:compiler:$project.ext.roomVersion"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$project.ext.retrofitVersion"
@@ -59,17 +61,15 @@ dependencies {
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$project.ext.glideVersion"
-    annotationProcessor "com.github.bumptech.glide:compiler:$project.ext.glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$project.ext.glideVersion"
 
     //RxJava2
     implementation "io.reactivex.rxjava2:rxandroid:$project.ext.rxAndroid"
     implementation "io.reactivex.rxjava2:rxjava:$project.ext.rxJava"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$project.ext.rxJavaAdapter"
 
-
     //Timber
     implementation "com.jakewharton.timber:timber:$project.ext.timberVersion"
-
 
     //Stetho
     implementation "com.facebook.stetho:stetho:$project.ext.stethoVersion"

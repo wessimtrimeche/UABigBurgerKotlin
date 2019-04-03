@@ -33,21 +33,21 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
     private lateinit var progressBar: ProgressBar
     private var isAddedToBaset: Boolean = false
     private lateinit var myToolbar: Toolbar
-    override protected fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
         initViews()
         setSupportActionBar(myToolbar)
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         presenter = ProductDetailsPresenter(this)
-        if (getIntent().getExtras() != null) {
+        if (intent.extras != null) {
             catalogProduct =
-                Gson().fromJson(getIntent()?.getExtras()?.getString(catalogProductKey), CatalogProductModel::class.java)
-            setTitle(catalogProduct.title)
+                Gson().fromJson(intent?.getExtras()?.getString(catalogProductKey), CatalogProductModel::class.java)
+            title = catalogProduct.title
             isAddedToBaset = UABigBurgerKotlinApp.preferences.getBoolean(catalogProduct.ref, false)
-            price.setText(String.format(getResources().getString(R.string.format), catalogProduct.price))
-            description.setText(catalogProduct.description)
-            Glide.with(getApplicationContext())
+            price.text = String.format(getResources().getString(R.string.format), catalogProduct.price)
+            description.text = catalogProduct.description
+            Glide.with(applicationContext)
                 .load(catalogProduct.thumbnail)
                 .apply(
                     RequestOptions()
@@ -62,12 +62,12 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
                 button.setText(R.string.add_to_basket)
                 popupConfirm.setText(R.string.confirm_add_popup)
             }
-            button.setOnClickListener({ bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED) })
-            cancel.setOnClickListener({ bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) })
-            confirm.setOnClickListener({
+            button.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED) }
+            cancel.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
+            confirm.setOnClickListener {
                 val product = Product(
                     Integer.parseInt(catalogProduct.ref), catalogProduct.title,
-                    catalogProduct.description, catalogProduct.thumbnail, catalogProduct.price
+                    catalogProduct.description, catalogProduct.thumbnail, catalogProduct.price!!
                 )
                 if (!isAddedToBaset) {
                     presenter.addProduct(product)
@@ -77,18 +77,18 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
                     UABigBurgerKotlinApp.preferences.putBoolean(catalogProduct.ref, false)
                 }
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
-            })
+            }
         }
     }
 
-    fun initViews() {
+    private fun initViews() {
         myToolbar = findViewById(R.id.my_toolbar)
         progressBar = findViewById(R.id.progressBar)
         price = findViewById(R.id.price)
         description = findViewById(R.id.description)
         imageView = findViewById(R.id.thumbnail)
         button = findViewById(R.id.button)
-        val llBottomSheet = findViewById(R.id.bottom_sheet) as LinearLayout
+        val llBottomSheet = findViewById<LinearLayout>(R.id.bottom_sheet)
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet)
         cancel = llBottomSheet.findViewById(R.id.cancel)
         confirm = llBottomSheet.findViewById(R.id.confirmation)
@@ -96,18 +96,18 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
     }
 
     override fun showProgress() {
-        progressBar.setVisibility(View.VISIBLE)
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progressBar.setVisibility(View.GONE)
+        progressBar.visibility = View.GONE
     }
 
     override fun onProductAdded() {
         button.setText(R.string.remove_from_basket)
         popupConfirm.setText(R.string.confirm_delete_popup)
         isAddedToBaset = true
-        Toast.makeText(getApplicationContext(), R.string.adding_to_basket_success, Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, R.string.adding_to_basket_success, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy(disposable: Disposable) {
@@ -118,31 +118,31 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
         button.setText(R.string.add_to_basket)
         popupConfirm.setText(R.string.confirm_add_popup)
         isAddedToBaset = false
-        Toast.makeText(getApplicationContext(), "Product successfully removed!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Product successfully removed!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        return when (item.itemId) {
             R.id.basket -> {
-                val intent = Intent(getApplicationContext(), ProductBasketActivity::class.java)
+                val intent = Intent(applicationContext, ProductBasketActivity::class.java)
                 startActivity(intent)
-                return true
+                true
             }
             R.id.reset -> {
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.basket).setVisible(false)
+        menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.basket).isVisible = false
         return true
     }
 
     companion object {
-        val catalogProductKey = "CATALOG_PRODUCT"
+        const val catalogProductKey = "CATALOG_PRODUCT"
     }
 }

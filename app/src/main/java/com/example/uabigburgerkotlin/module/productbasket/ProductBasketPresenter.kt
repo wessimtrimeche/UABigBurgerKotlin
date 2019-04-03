@@ -5,14 +5,9 @@ import com.example.uabigburgerkotlin.data.local.model.Product
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
-class ProductBasketPresenter internal constructor(productBasketView: ProductBasketView) {
-    private val productBasketView: ProductBasketView
+class ProductBasketPresenter(private val productBasketView: ProductBasketView) {
     private val databaseManager = DatabaseManager()
     private lateinit var disposable: Disposable
-
-    init {
-        this.productBasketView = productBasketView
-    }
 
     internal fun getBasketProducts() {
         productBasketView.showProgress()

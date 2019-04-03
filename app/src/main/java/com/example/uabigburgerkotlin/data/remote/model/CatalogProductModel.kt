@@ -6,5 +6,7 @@ data class CatalogProductModel(
     val title: String?,
     val description: String?,
     val thumbnail: String?,
-    val price: Float
+    val price: Float?
+
+
 )

@@ -8,15 +8,9 @@ import android.widget.TextView
 import com.example.uabigburgerkotlin.R
 
 class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    var name: TextView
-    var price: TextView
-    var imageView: ImageView
-    var cardView: CardView
+    var name: TextView = view.findViewById(R.id.itemTitle)
+    var price: TextView = view.findViewById(R.id.itemPrice)
+    var imageView: ImageView = view.findViewById(R.id.itemThumbnail)
+    var cardView: CardView = view.findViewById(R.id.cardView)
 
-    init {
-        name = view.findViewById(R.id.itemTitle)
-        price = view.findViewById(R.id.itemPrice)
-        imageView = view.findViewById(R.id.itemThumbnail)
-        cardView = view.findViewById(R.id.cardView)
-    }
 }

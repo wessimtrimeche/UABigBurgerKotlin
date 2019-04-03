@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.uabigburgerkotlin.R
-import com.example.uabigburgerkotlin.data.remote.dto.ECatalogProduct
+import com.example.uabigburgerkotlin.data.remote.model.CatalogProductModel
 import com.example.uabigburgerkotlin.module.adapter.viewholder.ProductViewHolder
 
 class ProductsAdapter(private val productClickListener: ProductClickListener) :
     RecyclerView.Adapter<ProductViewHolder>() {
-    private val catalogProducts = mutableListOf<ECatalogProduct>()
+    private val catalogProducts = mutableListOf<CatalogProductModel>()
 
     override fun getItemCount(): Int {
         return catalogProducts.size
@@ -28,11 +28,9 @@ class ProductsAdapter(private val productClickListener: ProductClickListener) :
     override fun onBindViewHolder(@NonNull productViewHolder: ProductViewHolder, i: Int) {
         val currentCatalogProduct = catalogProducts.get(i)
         productViewHolder.name.setText(currentCatalogProduct.title)
-        productViewHolder.price.setText(
-            String.format(
-                productViewHolder.price.context.getResources().getString(R.string.format),
-                currentCatalogProduct.price
-            )
+        productViewHolder.price.text = String.format(
+            productViewHolder.price.context.getResources().getString(R.string.format),
+            currentCatalogProduct.price
         )
         Glide.with(productViewHolder.imageView.context)
             .load(currentCatalogProduct.thumbnail)
@@ -42,15 +40,15 @@ class ProductsAdapter(private val productClickListener: ProductClickListener) :
                     .error(R.drawable.no_image)
             )
             .into(productViewHolder.imageView)
-        productViewHolder.cardView.setOnClickListener({ productClickListener.onProductClicked(currentCatalogProduct) })
+        productViewHolder.cardView.setOnClickListener { productClickListener.onProductClicked(currentCatalogProduct) }
     }
 
-    fun addItems(catalogProducts: MutableList<ECatalogProduct>) {
+    fun addItems(catalogProducts: MutableList<CatalogProductModel>) {
         this.catalogProducts.addAll(catalogProducts)
         notifyDataSetChanged()
     }
 
     interface ProductClickListener {
-        fun onProductClicked(catalogProductModel: ECatalogProduct)
+        fun onProductClicked(catalogProductModel: CatalogProductModel)
     }
 }

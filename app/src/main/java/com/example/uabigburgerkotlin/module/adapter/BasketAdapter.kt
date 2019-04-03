@@ -19,7 +19,7 @@ class BasketAdapter(private val productClickListener: BasketProductClickListener
 
     @NonNull
     override fun onCreateViewHolder(@NonNull viewGroup: ViewGroup, i: Int): ProductViewHolder {
-        val layout = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_product, viewGroup, false)
+        val layout = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_product, viewGroup, false)
         return ProductViewHolder(layout)
     }
 
@@ -30,14 +30,12 @@ class BasketAdapter(private val productClickListener: BasketProductClickListener
 
     override fun onBindViewHolder(@NonNull productViewHolder: ProductViewHolder, i: Int) {
         val currentCatalogProduct = basketProducts.get(i)
-        productViewHolder.name.setText(currentCatalogProduct.title)
-        productViewHolder.price.setText(
-            String.format(
-                productViewHolder.price.getContext().getResources().getString(R.string.format),
-                currentCatalogProduct.price
-            )
+        productViewHolder.name.text = currentCatalogProduct.title
+        productViewHolder.price.text = String.format(
+            productViewHolder.price.context.resources.getString(R.string.format),
+            currentCatalogProduct.price
         )
-        Glide.with(productViewHolder.cardView.getContext())
+        Glide.with(productViewHolder.cardView.context)
             .load(currentCatalogProduct.thumbnail)
             .apply(
                 RequestOptions()
@@ -45,11 +43,11 @@ class BasketAdapter(private val productClickListener: BasketProductClickListener
                     .error(R.drawable.no_image)
             )
             .into(productViewHolder.imageView)
-        productViewHolder.cardView.setOnClickListener({
+        productViewHolder.cardView.setOnClickListener {
             productClickListener.onBasketProductClicked(
                 currentCatalogProduct
             )
-        })
+        }
     }
 
     fun addItems(basketProducts: MutableList<Product>) {

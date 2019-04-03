@@ -33,13 +33,13 @@ class UABigBurgerKotlinApp : Application() {
 
     //TODO: As you use dagger there is no need for those initialisations
     private fun initInstances() {
-        productDatabase = ProductDatabase.getRoomDatabaseInstance(getApplicationContext())
+        productDatabase = ProductDatabase.getRoomDatabaseInstance(applicationContext)
         preferences = SharedPreferencesProvider.getSharedPreferencesInstance(
-            getApplicationContext().getSharedPreferences(
+            applicationContext.getSharedPreferences(
                 SharedPreferencesProvider.NAME,
                 Context.MODE_PRIVATE
             )
         )
-        service = RetrofitClient.getRetrofitInstance(getApplicationContext()).create(APICalls::class.java)
+        service = RetrofitClient.getRetrofitInstance(applicationContext).create(APICalls::class.java)
     }
 }

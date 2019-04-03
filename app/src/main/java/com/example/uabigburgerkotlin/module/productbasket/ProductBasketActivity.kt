@@ -16,9 +16,10 @@ import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
 import com.example.uabigburgerkotlin.data.local.model.Product
 import com.example.uabigburgerkotlin.module.adapter.BasketAdapter
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 
 class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
-    //TODO: use more significant naming convention
+
     private lateinit var presenter: ProductBasketPresenter
     private lateinit var myToolbar: Toolbar
     private lateinit var progressBar: ProgressBar
@@ -45,31 +46,31 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         setSupportActionBar(myToolbar)
         presenter = ProductBasketPresenter(this@ProductBasketActivity)
         presenter.getBasketProducts()
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
-        recyclerView.setLayoutManager(gridLayoutManager)
-        recyclerView.setItemAnimator(DefaultItemAnimator())
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        recyclerView.layoutManager = gridLayoutManager
+        recyclerView.itemAnimator = DefaultItemAnimator()
         productsAdapter = BasketAdapter(object : BasketAdapter.BasketProductClickListener {
             override fun onBasketProductClicked(basketProductModel: Product) {
                 clickedProduct = basketProductModel
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
             }
         })
 
-        recyclerView.setAdapter(productsAdapter)
+        recyclerView.adapter = productsAdapter
         popupConfirm.setText(R.string.confirm_delete_popup)
-        confirm.setOnClickListener({
+        confirm.setOnClickListener {
             UABigBurgerKotlinApp.preferences.putBoolean((clickedProduct.ref.toString()), false)
             presenter.removeProduct(clickedProduct)
             total -= clickedProduct.price
-            totalPrice.setText(getResources().getString(R.string.total_price, total))
+            totalPrice.text = resources.getString(R.string.total_price, total)
             size = productsAdapter.removeItem(clickedProduct)
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
-        })
-        cancel.setOnClickListener({ bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) })
+        }
+        cancel.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
     }
 
-    fun initViews() {
+    private fun initViews() {
         myToolbar = findViewById(R.id.my_toolbar)
         progressBar = findViewById(R.id.progressBar)
         totalPrice = findViewById(R.id.totalPrice)
@@ -77,7 +78,7 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         emptyCartText = findViewById(R.id.emptyCartText)
         gridLayoutManager = GridLayoutManager(this, 2)
         recyclerView = findViewById(R.id.basketRecyclerView)
-        val llBottomSheet = findViewById(R.id.bottom_sheet) as LinearLayout
+        val llBottomSheet = findViewById<LinearLayout>(R.id.bottom_sheet)
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet)
         cancel = llBottomSheet.findViewById(R.id.cancel)
         confirm = llBottomSheet.findViewById(R.id.confirmation)
@@ -85,30 +86,30 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
     }
 
     override fun showProgress() {
-        progressBar.setVisibility(View.VISIBLE)
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progressBar.setVisibility(View.GONE)
+        progressBar.visibility = View.GONE
     }
 
     override fun onFetchBasketProducts(basketProducts: List<Product>) {
-        if (basketProducts.size > 0) {
-            emptyCart.setVisibility(View.GONE)
-            emptyCartText.setVisibility(View.GONE)
+        if (basketProducts.isNotEmpty()) {
+            emptyCart.visibility = View.GONE
+            emptyCartText.visibility = View.GONE
         } else {
-            totalPrice.setVisibility(View.GONE)
+            totalPrice.visibility = View.GONE
         }
         productArrayList.addAll(basketProducts)
         productsAdapter.addItems(productArrayList)
         for (p in basketProducts) {
             total += p.price
         }
-        totalPrice.setText(getResources().getString(R.string.total_price, total))
+        totalPrice.text = resources.getString(R.string.total_price, total)
     }
 
     override fun onFetchBasketProductsFailure() {
-        // TODO : never keep method without implementation. in case of no logic behind use Timber to just display text on console
+        Timber.e("Failed to fetch basket products ")
     }
 
     override fun onDestroy(disposable: Disposable) {
@@ -117,27 +118,27 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
 
     override fun onRemoveSuccess() {
         if (size == 0) {
-            totalPrice.setVisibility(View.GONE)
-            emptyCart.setVisibility(View.VISIBLE)
-            emptyCartText.setVisibility(View.VISIBLE)
+            totalPrice.visibility = View.GONE
+            emptyCart.visibility = View.VISIBLE
+            emptyCartText.visibility = View.VISIBLE
         }
-        Toast.makeText(getApplicationContext(), R.string.removal_success, Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, R.string.removal_success, Toast.LENGTH_SHORT).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
-            R.id.basket -> return true
+        return when (item.itemId) {
+            R.id.basket -> true
             R.id.reset -> {
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.basket).setVisible(false)
+        menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.basket).isVisible = false
         return true
     }
 }

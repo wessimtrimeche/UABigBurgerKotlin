@@ -4,14 +4,9 @@ import com.example.uabigburgerkotlin.data.DataManager
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
-class ProductsListPresenter internal constructor(productsListView: ProductsListView) {
-    private val productsListView: ProductsListView
+class ProductsListPresenter(private val productsListView: ProductsListView) {
     private val dataManager = DataManager()
     private lateinit var disposable: Disposable
-
-    init {
-        this.productsListView = productsListView
-    }
 
     internal fun getFullProducts() {
         productsListView.showProgress()

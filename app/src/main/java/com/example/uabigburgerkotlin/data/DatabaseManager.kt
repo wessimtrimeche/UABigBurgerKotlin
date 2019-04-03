@@ -24,10 +24,9 @@ class DatabaseManager {
     }
 
     fun removeProductFromBasket(product: Product): Observable<Any> {
-        return Observable.create({ subscriber: ObservableEmitter<Any> ->
+        return Observable.create { subscriber: ObservableEmitter<Any> ->
             UABigBurgerKotlinApp.productDatabase.productsDAO().deleteProduct(product)
             subscriber.onComplete()
-        }
-        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 }

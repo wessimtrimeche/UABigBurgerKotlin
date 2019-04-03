@@ -1,3 +1,22 @@
 <resources>
-    <string name="app_name">UABigBurgerKotlin</string>
+    <string name="app_name">Big Burger</string>
+    <string name="title_activity_product_list">ProductListActivity</string>
+    <string name="basket_menu_title">Basket</string>
+    <string name="reset">Back</string>
+    <string name="format">%.2f €</string>
+    <string name="confirm_add_popup">Do you want to add this product to your basket ?</string>
+    <string name="confirm_delete_popup">Do you want to remove this product from your basket ?</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Yes</string>
+    <string name="default_title">Title</string>
+    <string name="default_price">10 $</string>
+    <string name="add_to_basket">Add to Basket</string>
+    <string name="network_error">Some Network error occurred</string>
+    <string name="network_error_button">Try Again</string>
+    <string name="total_price">Total : %.2f €</string>
+    <string name="adding_to_basket_success">Product successfully added to basket</string>
+    <string name="removal_success">Product successfully removed!</string>
+    <string name="remove_from_basket">Remove from basket</string>
+    <string name="fill_basket">Please fill your basket from the menu</string>
+    <string name="product_database_name">products</string>
 </resources>

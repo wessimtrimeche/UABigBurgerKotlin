@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="80dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+
+    <TextView
+        android:id="@+id/popupConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/green_52a0a1"
+        android:gravity="center"
+        android:text="@string/confirm_add_popup"
+        android:textColor="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@android:color/black" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="40dp"
+            android:background="@color/grey_DFDFDF" />
+
+        <TextView
+            android:id="@+id/confirmation"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+</LinearLayout>

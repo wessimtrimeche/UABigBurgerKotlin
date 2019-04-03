@@ -20,9 +20,9 @@ import timber.log.Timber
 
 class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
 
-    private lateinit var presenter: ProductBasketPresenter
-    private lateinit var myToolbar: Toolbar
-    private lateinit var progressBar: ProgressBar
+    private lateinit var productBasketPresenter: ProductBasketPresenter
+    private lateinit var productBasketToolbar: Toolbar
+    private lateinit var productBasketProgressBar: ProgressBar
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var productsAdapter: BasketAdapter
@@ -30,22 +30,22 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
     private lateinit var clickedProduct: Product
     private lateinit var emptyCart: ImageView
     private lateinit var emptyCartText: TextView
-    private lateinit var cancel: TextView
-    private lateinit var confirm: TextView
-    private lateinit var popupConfirm: TextView
-    private lateinit var totalPrice: TextView
+    private lateinit var cancelAddToBasket: TextView
+    private lateinit var confirmAddToBasket: TextView
+    private lateinit var popupConfirmAddToBasket: TextView
+    private lateinit var totalBasketPriceTv: TextView
     private val productArrayList = mutableListOf<Product>()
-    private var total = 0f
-    private var size: Int = 0
+    private var totalBasketPrice = 0f
+    private var sizeBasketItems: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_basket)
         initViews()
-        setSupportActionBar(myToolbar)
-        presenter = ProductBasketPresenter(this@ProductBasketActivity)
-        presenter.getBasketProducts()
+        setSupportActionBar(productBasketToolbar)
+        productBasketPresenter = ProductBasketPresenter(this@ProductBasketActivity)
+        productBasketPresenter.getBasketProducts()
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -58,39 +58,39 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         })
 
         recyclerView.adapter = productsAdapter
-        popupConfirm.setText(R.string.confirm_delete_popup)
-        confirm.setOnClickListener {
+        popupConfirmAddToBasket.setText(R.string.confirm_delete_popup)
+        confirmAddToBasket.setOnClickListener {
             UABigBurgerKotlinApp.preferences.putBoolean((clickedProduct.ref.toString()), false)
-            presenter.removeProduct(clickedProduct)
-            total -= clickedProduct.price
-            totalPrice.text = resources.getString(R.string.total_price, total)
-            size = productsAdapter.removeItem(clickedProduct)
+            productBasketPresenter.removeProduct(clickedProduct)
+            totalBasketPrice -= clickedProduct.price
+            totalBasketPriceTv.text = resources.getString(R.string.total_price, totalBasketPrice)
+            sizeBasketItems = productsAdapter.removeItem(clickedProduct)
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
         }
-        cancel.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
+        cancelAddToBasket.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
     }
 
     private fun initViews() {
-        myToolbar = findViewById(R.id.my_toolbar)
-        progressBar = findViewById(R.id.progressBar)
-        totalPrice = findViewById(R.id.totalPrice)
+        productBasketToolbar = findViewById(R.id.my_toolbar)
+        productBasketProgressBar = findViewById(R.id.progressBar)
+        totalBasketPriceTv = findViewById(R.id.totalPrice)
         emptyCart = findViewById(R.id.emptyCart)
         emptyCartText = findViewById(R.id.emptyCartText)
         gridLayoutManager = GridLayoutManager(this, 2)
         recyclerView = findViewById(R.id.basketRecyclerView)
         val llBottomSheet = findViewById<LinearLayout>(R.id.bottom_sheet)
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet)
-        cancel = llBottomSheet.findViewById(R.id.cancel)
-        confirm = llBottomSheet.findViewById(R.id.confirmation)
-        popupConfirm = llBottomSheet.findViewById(R.id.popupConfirm)
+        cancelAddToBasket = llBottomSheet.findViewById(R.id.cancel)
+        confirmAddToBasket = llBottomSheet.findViewById(R.id.confirmation)
+        popupConfirmAddToBasket = llBottomSheet.findViewById(R.id.popupConfirm)
     }
 
     override fun showProgress() {
-        progressBar.visibility = View.VISIBLE
+        productBasketProgressBar.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progressBar.visibility = View.GONE
+        productBasketProgressBar.visibility = View.GONE
     }
 
     override fun onFetchBasketProducts(basketProducts: List<Product>) {
@@ -98,14 +98,14 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
             emptyCart.visibility = View.GONE
             emptyCartText.visibility = View.GONE
         } else {
-            totalPrice.visibility = View.GONE
+            totalBasketPriceTv.visibility = View.GONE
         }
         productArrayList.addAll(basketProducts)
         productsAdapter.addItems(productArrayList)
         for (p in basketProducts) {
-            total += p.price
+            totalBasketPrice += p.price
         }
-        totalPrice.text = resources.getString(R.string.total_price, total)
+        totalBasketPriceTv.text = resources.getString(R.string.total_price, totalBasketPrice)
     }
 
     override fun onFetchBasketProductsFailure() {
@@ -117,8 +117,8 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
     }
 
     override fun onRemoveSuccess() {
-        if (size == 0) {
-            totalPrice.visibility = View.GONE
+        if (sizeBasketItems == 0) {
+            totalBasketPriceTv.visibility = View.GONE
             emptyCart.visibility = View.VISIBLE
             emptyCartText.visibility = View.VISIBLE
         }

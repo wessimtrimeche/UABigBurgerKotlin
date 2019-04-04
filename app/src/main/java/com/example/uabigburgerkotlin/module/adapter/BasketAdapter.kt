@@ -29,7 +29,7 @@ class BasketAdapter(private val productClickListener: BasketProductClickListener
     }
 
     override fun onBindViewHolder(@NonNull productViewHolder: ProductViewHolder, i: Int) {
-        val currentCatalogProduct = basketProducts.get(i)
+        val currentCatalogProduct = basketProducts[i]
         productViewHolder.name.text = currentCatalogProduct.title
         productViewHolder.price.text = String.format(
             productViewHolder.price.context.resources.getString(R.string.format),

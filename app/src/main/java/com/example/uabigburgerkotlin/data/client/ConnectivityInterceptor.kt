@@ -16,22 +16,20 @@ class ConnectivityInterceptor(private val context: Context) : Interceptor {
 
             throw NoConnectivityException(context)
         } else {
-            val response = chain.proceed(chain.request())
-            return response
+            return chain.proceed(chain.request())
         }
     }
 
     companion object {
 
         fun isConnectedToNetwork(context: Context): Boolean {
-            lateinit var connectivityManager: ConnectivityManager
-            connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            var connectivityManager: ConnectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             val activeNetwork = connectivityManager.activeNetworkInfo
-            var isConnected = activeNetwork != null && activeNetwork.isConnected
 
 
-            return isConnected
+            return activeNetwork != null && activeNetwork.isConnected
         }
     }
 }

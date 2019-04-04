@@ -21,13 +21,13 @@ class ProductsAdapter(private val productClickListener: ProductClickListener) :
 
     @NonNull
     override fun onCreateViewHolder(@NonNull viewGroup: ViewGroup, i: Int): ProductViewHolder {
-        val layout = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_product, viewGroup, false)
+        val layout = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_product, viewGroup, false)
         return ProductViewHolder(layout)
     }
 
     override fun onBindViewHolder(@NonNull productViewHolder: ProductViewHolder, i: Int) {
         val currentCatalogProduct = catalogProducts.get(i)
-        productViewHolder.name.setText(currentCatalogProduct.title)
+        productViewHolder.name.text = currentCatalogProduct.title
         productViewHolder.price.text = String.format(
             productViewHolder.price.context.getResources().getString(R.string.format),
             currentCatalogProduct.price

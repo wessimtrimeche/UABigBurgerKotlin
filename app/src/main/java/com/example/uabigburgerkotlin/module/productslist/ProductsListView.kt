@@ -1,6 +1,5 @@
 package com.example.uabigburgerkotlin.module.productslist
 
-import com.example.uabigburgerkotlin.data.remote.dto.ECatalogProduct
 import com.example.uabigburgerkotlin.data.remote.model.CatalogProductModel
 import com.example.uabigburgerkotlin.module.base.BaseView
 

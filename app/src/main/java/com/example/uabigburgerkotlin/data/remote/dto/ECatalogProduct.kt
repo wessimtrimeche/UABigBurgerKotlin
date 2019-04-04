@@ -7,5 +7,4 @@ data class ECatalogProduct(
     val thumbnail: String?,
     val price: Float?
 
-
 )

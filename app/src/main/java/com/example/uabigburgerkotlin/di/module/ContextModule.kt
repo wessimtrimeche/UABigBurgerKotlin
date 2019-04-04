@@ -1,4 +1,4 @@
-package com.example.uabigburgerkotlin.di
+package com.example.uabigburgerkotlin.di.module
 
 import android.content.Context
 import dagger.Module

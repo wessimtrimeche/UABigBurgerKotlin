@@ -1,6 +1,7 @@
-package com.example.uabigburgerkotlin.di
+package com.example.uabigburgerkotlin.di.component
 
 import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
+import com.example.uabigburgerkotlin.di.module.*
 import com.example.uabigburgerkotlin.module.productbasket.ProductBasketActivity
 import com.example.uabigburgerkotlin.module.productbasket.ProductBasketPresenter
 import com.example.uabigburgerkotlin.module.productdetails.ProductDetailsActivity

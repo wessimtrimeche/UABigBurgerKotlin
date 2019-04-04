@@ -1,4 +1,4 @@
-package com.example.uabigburgerkotlin.di
+package com.example.uabigburgerkotlin.di.module
 
 import com.example.uabigburgerkotlin.BuildConfig
 import com.example.uabigburgerkotlin.data.APICalls

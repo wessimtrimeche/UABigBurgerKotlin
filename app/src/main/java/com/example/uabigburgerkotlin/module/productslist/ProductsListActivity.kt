@@ -6,14 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import com.example.uabigburgerkotlin.R
 import com.example.uabigburgerkotlin.data.remote.model.CatalogProductModel
 import com.example.uabigburgerkotlin.module.adapter.ProductsAdapter
@@ -22,17 +17,12 @@ import com.example.uabigburgerkotlin.module.productbasket.ProductBasketActivity
 import com.example.uabigburgerkotlin.module.productdetails.ProductDetailsActivity
 import com.google.gson.Gson
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_products_list.*
 
 class ProductsListActivity : AppCompatActivity(), ProductsListView {
 
 
     private lateinit var presenter: ProductsListPresenter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var errorText: TextView
-    private lateinit var retryButton: Button
-    private lateinit var errorImage: ImageView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var myToolbar: Toolbar
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var productsAdapter: ProductsAdapter
     private var catalogProductsList = mutableListOf<CatalogProductModel>()
@@ -40,12 +30,12 @@ class ProductsListActivity : AppCompatActivity(), ProductsListView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_products_list)
-        initViews()
-        setSupportActionBar(myToolbar)
+        gridLayoutManager = GridLayoutManager(this, 2)
+        setSupportActionBar(product_list_toolbar)
         presenter = ProductsListPresenter(this)
         presenter.getFullProducts()
-        recyclerView.layoutManager = gridLayoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
+        product_list_catalog_recycler_view.layoutManager = gridLayoutManager as RecyclerView.LayoutManager?
+        product_list_catalog_recycler_view.itemAnimator = DefaultItemAnimator()
         productsAdapter = ProductsAdapter(object : ProductClickListener {
             override fun onProductClicked(catalogProductModel: CatalogProductModel) {
                 val intent = Intent(applicationContext, ProductDetailsActivity::class.java)
@@ -56,40 +46,30 @@ class ProductsListActivity : AppCompatActivity(), ProductsListView {
 
 
         })
-        recyclerView.adapter = productsAdapter
-        retryButton.setOnClickListener { presenter.getFullProducts() }
-    }
-
-    private fun initViews() {
-        myToolbar = findViewById(R.id.my_toolbar)
-        progressBar = findViewById(R.id.progressBar)
-        gridLayoutManager = GridLayoutManager(this, 2)
-        recyclerView = findViewById(R.id.catalogRecyclerView)
-        errorText = findViewById(R.id.errorLabel)
-        retryButton = findViewById(R.id.retry)
-        errorImage = findViewById(R.id.errorImage)
+        product_list_catalog_recycler_view.adapter = productsAdapter
+        product_list_retry.setOnClickListener { presenter.getFullProducts() }
     }
 
     override fun showProgress() {
-        progressBar.visibility = View.VISIBLE
+        product_list_progress_bar.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progressBar.visibility = View.GONE
+        product_list_progress_bar.visibility = View.GONE
     }
 
     override fun onFetchCatalogProducts(catalogProducts: MutableList<CatalogProductModel>) {
-        retryButton.visibility = View.GONE
-        errorText.visibility = View.GONE
-        errorImage.visibility = View.GONE
+        product_list_retry.visibility = View.GONE
+        product_list_error_label.visibility = View.GONE
+        product_list_error_image.visibility = View.GONE
         catalogProductsList.addAll(catalogProducts)
         productsAdapter.addItems(catalogProductsList)
     }
 
     override fun onFetchCatalogProductsFailed() {
-        retryButton.visibility = View.VISIBLE
-        errorImage.visibility = View.VISIBLE
-        errorText.visibility = View.VISIBLE
+        product_list_retry.visibility = View.VISIBLE
+        product_list_error_label.visibility = View.VISIBLE
+        product_list_error_image.visibility = View.VISIBLE
     }
 
     override fun onDestroy(disposable: Disposable) {

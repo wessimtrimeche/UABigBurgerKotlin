@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.uabigburgerkotlin.R
@@ -19,6 +18,8 @@ import com.example.uabigburgerkotlin.data.remote.model.CatalogProductModel
 import com.example.uabigburgerkotlin.module.productbasket.ProductBasketActivity
 import com.google.gson.Gson
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_product_details.*
+import kotlinx.android.synthetic.main.popup_confirmation.*
 import javax.inject.Inject
 
 class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
@@ -26,26 +27,18 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
     @Inject
     lateinit var preferences: SharedPreferencesProvider
     private lateinit var catalogProduct: CatalogProductModel
-    private lateinit var price: TextView
-    private lateinit var description: TextView
-    private lateinit var cancel: TextView
-    private lateinit var confirm: TextView
-    private lateinit var popupConfirm: TextView
-    private lateinit var imageView: ImageView
-    private lateinit var button: Button
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var presenter: ProductDetailsPresenter
-    private lateinit var progressBar: ProgressBar
     private var isAddedToBaset: Boolean = false
-    private lateinit var myToolbar: Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
 
         UABigBurgerKotlinApp.uaBigBurgerAppComponent.inject(this)
 
-        initViews()
-        setSupportActionBar(myToolbar)
+        bottomSheetBehavior = BottomSheetBehavior.from(popup_bottom_sheet)
+        setSupportActionBar(product_details_toolbar)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         presenter = ProductDetailsPresenter(this)
         if (intent.extras != null) {
@@ -53,8 +46,8 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
                 Gson().fromJson(intent?.getExtras()?.getString(catalogProductKey), CatalogProductModel::class.java)
             title = catalogProduct.title
             isAddedToBaset = preferences.getBoolean(catalogProduct.ref, false)
-            price.text = String.format(getResources().getString(R.string.format), catalogProduct.price)
-            description.text = catalogProduct.description
+            product_details_price.text = String.format(getResources().getString(R.string.format), catalogProduct.price)
+            product_details_description.text = catalogProduct.description
             Glide.with(applicationContext)
                 .load(catalogProduct.thumbnail)
                 .apply(
@@ -62,17 +55,17 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
                         .placeholder(R.drawable.no_image)
                         .error(R.drawable.no_image)
                 )
-                .into(imageView)
+                .into(product_details_thumbnail)
             if (isAddedToBaset) {
-                button.setText(R.string.remove_from_basket)
-                popupConfirm.setText(R.string.confirm_delete_popup)
+                product_details_button.setText(R.string.remove_from_basket)
+                popup_title.setText(R.string.confirm_delete_popup)
             } else {
-                button.setText(R.string.add_to_basket)
-                popupConfirm.setText(R.string.confirm_add_popup)
+                product_details_button.setText(R.string.add_to_basket)
+                popup_title.setText(R.string.confirm_add_popup)
             }
-            button.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED) }
-            cancel.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
-            confirm.setOnClickListener {
+            product_details_button.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED) }
+            popup_cancel.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
+            popup_confirm.setOnClickListener {
                 val product = Product(
                     Integer.parseInt(catalogProduct.ref), catalogProduct.title,
                     catalogProduct.description, catalogProduct.thumbnail, catalogProduct.price!!
@@ -89,31 +82,18 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
         }
     }
 
-    private fun initViews() {
-        myToolbar = findViewById(R.id.product_basket_toolbar)
-        progressBar = findViewById(R.id.product_basket_progress_bar)
-        price = findViewById(R.id.price)
-        description = findViewById(R.id.description)
-        imageView = findViewById(R.id.thumbnail)
-        button = findViewById(R.id.button)
-        val llBottomSheet = findViewById<LinearLayout>(R.id.bottom_sheet)
-        bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet)
-        cancel = llBottomSheet.findViewById(R.id.cancel)
-        confirm = llBottomSheet.findViewById(R.id.confirmation)
-        popupConfirm = llBottomSheet.findViewById(R.id.popupConfirm)
-    }
 
     override fun showProgress() {
-        progressBar.visibility = View.VISIBLE
+        product_details_progress_bar.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progressBar.visibility = View.GONE
+        product_details_progress_bar.visibility = View.GONE
     }
 
     override fun onProductAdded() {
-        button.setText(R.string.remove_from_basket)
-        popupConfirm.setText(R.string.confirm_delete_popup)
+        product_details_button.setText(R.string.remove_from_basket)
+        popup_title.setText(R.string.confirm_delete_popup)
         isAddedToBaset = true
         Toast.makeText(applicationContext, R.string.adding_to_basket_success, Toast.LENGTH_SHORT).show()
     }
@@ -123,8 +103,8 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
     }
 
     override fun onRemoveSuccess() {
-        button.setText(R.string.add_to_basket)
-        popupConfirm.setText(R.string.confirm_add_popup)
+        product_details_button.setText(R.string.add_to_basket)
+        popup_title.setText(R.string.confirm_add_popup)
         isAddedToBaset = false
         Toast.makeText(applicationContext, "Product successfully removed!", Toast.LENGTH_SHORT).show()
     }

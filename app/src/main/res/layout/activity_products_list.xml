@@ -9,63 +9,63 @@
 
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/my_toolbar"
+            android:id="@+id/product_list_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
 
     <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/product_list_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"/>
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/my_toolbar">
+            android:layout_below="@+id/product_list_toolbar">
 
         <android.support.v7.widget.RecyclerView
-                android:id="@+id/catalogRecyclerView"
+                android:id="@+id/product_list_catalog_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbarSize="1dp"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_product" />
+                tools:listitem="@layout/item_product"/>
 
         <ImageView
-                android:id="@+id/errorImage"
+                android:id="@+id/product_list_error_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:src="@drawable/network_error"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         <TextView
-                android:id="@+id/errorLabel"
+                android:id="@+id/product_list_error_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/errorImage"
+                android:layout_below="@+id/product_list_error_image"
                 android:layout_centerInParent="true"
                 android:text="@string/network_error"
                 android:textColor="@android:color/black"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         <Button
-                android:id="@+id/retry"
+                android:id="@+id/product_list_retry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/errorLabel"
+                android:layout_below="@+id/product_list_error_label"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:text="@string/network_error_button"
                 android:textAllCaps="false"
-                android:visibility="gone" />
+                android:visibility="gone"/>
     </RelativeLayout>
 
 </RelativeLayout>

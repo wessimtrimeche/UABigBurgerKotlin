@@ -75,4 +75,8 @@ dependencies {
     implementation "com.facebook.stetho:stetho:$project.ext.stethoVersion"
     implementation "com.facebook.stetho:stetho-okhttp3:$project.ext.stethoVersion"
 
+    //Dagger
+    api 'com.google.dagger:dagger:2.21'
+    kapt 'com.google.dagger:dagger-compiler:2.21'
+
 }

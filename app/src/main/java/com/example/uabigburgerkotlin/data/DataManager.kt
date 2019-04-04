@@ -1,18 +1,20 @@
 package com.example.uabigburgerkotlin.data
 
-import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
 import com.example.uabigburgerkotlin.data.remote.mapper.ProductsMapper
 import com.example.uabigburgerkotlin.data.remote.model.CatalogProductModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DataManager {
+@Singleton
+class DataManager @Inject constructor(private val apiCalls: APICalls) {
 
 
     fun getCatalogProducts(): Observable<MutableList<CatalogProductModel>> {
 
-        return UABigBurgerKotlinApp.service.getCatalogProducts()
+        return apiCalls.getCatalogProducts()
             .map { e ->
                 ProductsMapper.mapCatalogProducts(e)
             }
@@ -20,6 +22,4 @@ class DataManager {
             .observeOn(AndroidSchedulers.mainThread())
 
     }
-
-
 }

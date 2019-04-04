@@ -14,12 +14,17 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.uabigburgerkotlin.R
 import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
 import com.example.uabigburgerkotlin.data.local.model.Product
+import com.example.uabigburgerkotlin.data.provider.SharedPreferencesProvider
 import com.example.uabigburgerkotlin.data.remote.model.CatalogProductModel
 import com.example.uabigburgerkotlin.module.productbasket.ProductBasketActivity
 import com.google.gson.Gson
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 
 class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
+
+    @Inject
+    lateinit var preferences: SharedPreferencesProvider
     private lateinit var catalogProduct: CatalogProductModel
     private lateinit var price: TextView
     private lateinit var description: TextView
@@ -36,6 +41,9 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
+
+        UABigBurgerKotlinApp.uaBigBurgerAppComponent.inject(this)
+
         initViews()
         setSupportActionBar(myToolbar)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -44,7 +52,7 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
             catalogProduct =
                 Gson().fromJson(intent?.getExtras()?.getString(catalogProductKey), CatalogProductModel::class.java)
             title = catalogProduct.title
-            isAddedToBaset = UABigBurgerKotlinApp.preferences.getBoolean(catalogProduct.ref, false)
+            isAddedToBaset = preferences.getBoolean(catalogProduct.ref, false)
             price.text = String.format(getResources().getString(R.string.format), catalogProduct.price)
             description.text = catalogProduct.description
             Glide.with(applicationContext)
@@ -71,10 +79,10 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
                 )
                 if (!isAddedToBaset) {
                     presenter.addProduct(product)
-                    UABigBurgerKotlinApp.preferences.putBoolean(catalogProduct.ref, true)
+                    preferences.putBoolean(catalogProduct.ref, true)
                 } else {
                     presenter.removeProduct(product)
-                    UABigBurgerKotlinApp.preferences.putBoolean(catalogProduct.ref, false)
+                    preferences.putBoolean(catalogProduct.ref, false)
                 }
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
             }
@@ -82,8 +90,8 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
     }
 
     private fun initViews() {
-        myToolbar = findViewById(R.id.my_toolbar)
-        progressBar = findViewById(R.id.progressBar)
+        myToolbar = findViewById(R.id.product_basket_toolbar)
+        progressBar = findViewById(R.id.product_basket_progress_bar)
         price = findViewById(R.id.price)
         description = findViewById(R.id.description)
         imageView = findViewById(R.id.thumbnail)

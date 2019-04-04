@@ -1,35 +1,31 @@
-package bigburger.ua.com.uabigburger.data.provider
+package com.example.uabigburgerkotlin.data.provider
 
+import android.content.Context
 import android.content.SharedPreferences
+import javax.inject.Inject
+import javax.inject.Singleton
 
-/**
- * Created by wessim.trimeche on 17/02/19.
- */
-class SharedPreferencesProvider private constructor(preferences: SharedPreferences) {
-    private val sharedPreferences: SharedPreferences
+
+@Singleton
+class SharedPreferencesProvider @Inject constructor(context: Context) {
+    val sharedPreferencesProvider: SharedPreferences
 
     init {
-        sharedPreferences = preferences
+        this.sharedPreferencesProvider = context.getSharedPreferences(NAME, Context.MODE_PRIVATE)
     }
 
     fun getBoolean(key: String, defaultValue: Boolean): Boolean {
-        return sharedPreferences.getBoolean(key, defaultValue)
+        return sharedPreferencesProvider.getBoolean(key, defaultValue)
     }
 
     fun putBoolean(key: String, value: Boolean) {
-        val editor = sharedPreferences.edit()
+        val editor = sharedPreferencesProvider.edit()
         editor.putBoolean(key, value)
         editor.apply()
     }
 
     companion object {
-        lateinit var sharedPreferencesProvider: SharedPreferencesProvider
         var NAME = "SHARED_PREFERENCES"
-        fun getSharedPreferencesInstance(preferences: SharedPreferences): SharedPreferencesProvider {
 
-                sharedPreferencesProvider = SharedPreferencesProvider(preferences)
-
-            return sharedPreferencesProvider
-        }
     }
 }

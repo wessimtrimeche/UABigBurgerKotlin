@@ -14,12 +14,16 @@ import android.widget.*
 import com.example.uabigburgerkotlin.R
 import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
 import com.example.uabigburgerkotlin.data.local.model.Product
+import com.example.uabigburgerkotlin.data.provider.SharedPreferencesProvider
 import com.example.uabigburgerkotlin.module.adapter.BasketAdapter
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
+import javax.inject.Inject
 
 class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
 
+    @Inject
+    lateinit var preferences: SharedPreferencesProvider
     private lateinit var productBasketPresenter: ProductBasketPresenter
     private lateinit var productBasketToolbar: Toolbar
     private lateinit var productBasketProgressBar: ProgressBar
@@ -42,6 +46,9 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_basket)
+
+        UABigBurgerKotlinApp.uaBigBurgerAppComponent.inject(this)
+
         initViews()
         setSupportActionBar(productBasketToolbar)
         productBasketPresenter = ProductBasketPresenter(this@ProductBasketActivity)
@@ -60,7 +67,7 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         recyclerView.adapter = productsAdapter
         popupConfirmAddToBasket.setText(R.string.confirm_delete_popup)
         confirmAddToBasket.setOnClickListener {
-            UABigBurgerKotlinApp.preferences.putBoolean((clickedProduct.ref.toString()), false)
+            preferences.putBoolean((clickedProduct.ref.toString()), false)
             productBasketPresenter.removeProduct(clickedProduct)
             totalBasketPrice -= clickedProduct.price
             totalBasketPriceTv.text = resources.getString(R.string.total_price, totalBasketPrice)
@@ -71,13 +78,13 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
     }
 
     private fun initViews() {
-        productBasketToolbar = findViewById(R.id.my_toolbar)
-        productBasketProgressBar = findViewById(R.id.progressBar)
-        totalBasketPriceTv = findViewById(R.id.totalPrice)
-        emptyCart = findViewById(R.id.emptyCart)
-        emptyCartText = findViewById(R.id.emptyCartText)
+        productBasketToolbar = findViewById(R.id.product_basket_toolbar)
+        productBasketProgressBar = findViewById(R.id.product_basket_progress_bar)
+        totalBasketPriceTv = findViewById(R.id.product_basket_total_price)
+        emptyCart = findViewById(R.id.product_basket_empty_cart)
+        emptyCartText = findViewById(R.id.product_basket_empty_cart_text)
         gridLayoutManager = GridLayoutManager(this, 2)
-        recyclerView = findViewById(R.id.basketRecyclerView)
+        recyclerView = findViewById(R.id.basket_recycler_view)
         val llBottomSheet = findViewById<LinearLayout>(R.id.bottom_sheet)
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet)
         cancelAddToBasket = llBottomSheet.findViewById(R.id.cancel)

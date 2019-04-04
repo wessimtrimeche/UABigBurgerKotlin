@@ -1,12 +1,22 @@
 package com.example.uabigburgerkotlin.module.productslist
 
+import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
 import com.example.uabigburgerkotlin.data.DataManager
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
+import javax.inject.Inject
 
-class ProductsListPresenter(private val productsListView: ProductsListView) {
-    private val dataManager = DataManager()
+class ProductsListPresenter(val productsListView: ProductsListView) {
+
+    @Inject
+    lateinit var dataManager: DataManager
     private lateinit var disposable: Disposable
+
+    init {
+
+        UABigBurgerKotlinApp.uaBigBurgerAppComponent.inject(this)
+
+    }
 
     internal fun getFullProducts() {
         productsListView.showProgress()

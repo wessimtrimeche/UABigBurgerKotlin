@@ -11,6 +11,7 @@ class ProductBasketPresenter(private val productBasketView: ProductBasketView) {
     @Inject
     lateinit var databaseManager: DatabaseManager
     private lateinit var disposable: Disposable
+
     init {
 
         UABigBurgerKotlinApp.uaBigBurgerAppComponent.inject(this)

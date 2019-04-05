@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.popup_confirmation.*
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
 
     @Inject
@@ -37,14 +38,23 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_basket)
-
-        UABigBurgerKotlinApp.uaBigBurgerAppComponent.inject(this)
-        gridLayoutManager = GridLayoutManager(this, 2)
-        bottomSheetBehavior = BottomSheetBehavior.from(popup_bottom_sheet)
         setSupportActionBar(product_basket_toolbar)
-        productBasketPresenter = ProductBasketPresenter(this@ProductBasketActivity)
-        productBasketPresenter.getBasketProducts()
+        initBottomSheet()
+        initProductBasketList()
+        injectDependencies()
+        getBasketProducts()
+        manageBottomSheet()
+    }
+
+
+    fun initBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(popup_bottom_sheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+    }
+
+    fun initProductBasketList() {
+        gridLayoutManager = GridLayoutManager(this, 2)
         product_basket_recycler_view.layoutManager = gridLayoutManager
         product_basket_recycler_view.itemAnimator = DefaultItemAnimator()
         productsAdapter = BasketAdapter(object : BasketAdapter.BasketProductClickListener {
@@ -54,8 +64,14 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
 
             }
         })
-
         product_basket_recycler_view.adapter = productsAdapter
+    }
+
+    private fun injectDependencies() {
+        UABigBurgerKotlinApp.uaBigBurgerAppComponent.inject(this)
+    }
+
+    private fun manageBottomSheet() {
         popup_title.setText(R.string.confirm_delete_popup)
         popup_confirm.setOnClickListener {
             preferences.putBoolean((clickedProduct.ref.toString()), false)
@@ -68,6 +84,33 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         popup_cancel.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
     }
 
+
+    private fun getBasketProducts() {
+        productBasketPresenter = ProductBasketPresenter(this@ProductBasketActivity)
+        productBasketPresenter.getBasketProducts()
+    }
+
+
+    override fun onDestroy(disposable: Disposable) {
+        disposable.dispose()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.basket -> true
+            R.id.reset -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.basket).isVisible = false
+        return true
+    }
 
     override fun showProgress() {
         product_basket_progress_bar.visibility = View.VISIBLE
@@ -96,9 +139,6 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         Timber.e("Failed to fetch basket products ")
     }
 
-    override fun onDestroy(disposable: Disposable) {
-        disposable.dispose()
-    }
 
     override fun onRemoveSuccess() {
         if (sizeBasketItems == 0) {
@@ -107,22 +147,5 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
             product_basket_empty_cart_text.visibility = View.VISIBLE
         }
         Toast.makeText(applicationContext, R.string.removal_success, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.basket -> true
-            R.id.reset -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.basket).isVisible = false
-        return true
     }
 }

@@ -2,9 +2,9 @@ package com.example.uabigburgerkotlin
 
 
 import android.app.Application
-import com.example.uabigburgerkotlin.di.module.ContextModule
-import com.example.uabigburgerkotlin.di.DaggerUABigBurgerAppComponent
+import com.example.uabigburgerkotlin.di.component.DaggerUABigBurgerAppComponent
 import com.example.uabigburgerkotlin.di.component.UABigBurgerAppComponent
+import com.example.uabigburgerkotlin.di.module.ContextModule
 import com.facebook.stetho.BuildConfig
 import com.facebook.stetho.Stetho
 

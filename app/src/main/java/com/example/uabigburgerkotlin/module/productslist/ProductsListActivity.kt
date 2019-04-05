@@ -30,10 +30,36 @@ class ProductsListActivity : AppCompatActivity(), ProductsListView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_products_list)
-        gridLayoutManager = GridLayoutManager(this, 2)
         setSupportActionBar(product_list_toolbar)
-        presenter = ProductsListPresenter(this)
-        presenter.getFullProducts()
+        initProductsList()
+        getProductsList()
+        //in case of network failure
+        product_list_retry.setOnClickListener { presenter.getFullProducts() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.reset).isVisible = false
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.basket -> {
+                val intent = Intent(applicationContext, ProductBasketActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onDestroy(disposable: Disposable) {
+        disposable.dispose()
+    }
+
+    private fun initProductsList() {
+        gridLayoutManager = GridLayoutManager(this, 2)
         product_list_catalog_recycler_view.layoutManager = gridLayoutManager as RecyclerView.LayoutManager?
         product_list_catalog_recycler_view.itemAnimator = DefaultItemAnimator()
         productsAdapter = ProductsAdapter(object : ProductClickListener {
@@ -41,13 +67,14 @@ class ProductsListActivity : AppCompatActivity(), ProductsListView {
                 val intent = Intent(applicationContext, ProductDetailsActivity::class.java)
                 intent.putExtra(ProductDetailsActivity.catalogProductKey, Gson().toJson(catalogProductModel))
                 startActivity(intent)
-
             }
-
-
         })
         product_list_catalog_recycler_view.adapter = productsAdapter
-        product_list_retry.setOnClickListener { presenter.getFullProducts() }
+    }
+
+    private fun getProductsList() {
+        presenter = ProductsListPresenter(this)
+        presenter.getFullProducts()
     }
 
     override fun showProgress() {
@@ -70,26 +97,5 @@ class ProductsListActivity : AppCompatActivity(), ProductsListView {
         product_list_retry.visibility = View.VISIBLE
         product_list_error_label.visibility = View.VISIBLE
         product_list_error_image.visibility = View.VISIBLE
-    }
-
-    override fun onDestroy(disposable: Disposable) {
-        disposable.dispose()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.basket -> {
-                val intent = Intent(applicationContext, ProductBasketActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.reset).isVisible = false
-        return true
     }
 }

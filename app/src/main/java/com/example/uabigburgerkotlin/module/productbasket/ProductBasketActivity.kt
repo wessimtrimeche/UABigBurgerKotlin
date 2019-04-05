@@ -46,11 +46,30 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         manageBottomSheet()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.basket).isVisible = false
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.basket -> true
+            R.id.reset -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onDestroy(disposable: Disposable) {
+        disposable.dispose()
+    }
 
     fun initBottomSheet() {
         bottomSheetBehavior = BottomSheetBehavior.from(popup_bottom_sheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
     }
 
     fun initProductBasketList() {
@@ -84,32 +103,9 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
         popup_cancel.setOnClickListener { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN) }
     }
 
-
     private fun getBasketProducts() {
         productBasketPresenter = ProductBasketPresenter(this@ProductBasketActivity)
         productBasketPresenter.getBasketProducts()
-    }
-
-
-    override fun onDestroy(disposable: Disposable) {
-        disposable.dispose()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.basket -> true
-            R.id.reset -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.basket).isVisible = false
-        return true
     }
 
     override fun showProgress() {
@@ -138,7 +134,6 @@ class ProductBasketActivity : AppCompatActivity(), ProductBasketView {
     override fun onFetchBasketProductsFailure() {
         Timber.e("Failed to fetch basket products ")
     }
-
 
     override fun onRemoveSuccess() {
         if (sizeBasketItems == 0) {

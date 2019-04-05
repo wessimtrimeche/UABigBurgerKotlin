@@ -100,10 +100,6 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
         }
     }
 
-    override fun onDestroy(disposable: Disposable) {
-        disposable.dispose()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         menu.findItem(R.id.basket).isVisible = false
@@ -124,6 +120,10 @@ class ProductDetailsActivity : AppCompatActivity(), ProductDetailsView {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroy(disposable: Disposable) {
+        disposable.dispose()
     }
 
     override fun showProgress() {

@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DatabaseManager @Inject constructor(private val productDatabase: ProductDatabase) {
+class DatabaseManager @Inject constructor(val productDatabase: ProductDatabase) {
 
     fun getBasketProducts(): Observable<List<Product>> {
         return productDatabase.productsDAO().getProducts().subscribeOn(Schedulers.io()).observeOn(
@@ -18,6 +18,8 @@ class DatabaseManager @Inject constructor(private val productDatabase: ProductDa
         ).toObservable()
     }
 
+
+    //The observable.create is a workaround for room restriction on return types (no observables allowed)
     fun addProductToBasket(product: Product): Observable<Any> {
         return Observable.create { subscriber: ObservableEmitter<Any> ->
             productDatabase.productsDAO().addProduct(product)
@@ -26,6 +28,7 @@ class DatabaseManager @Inject constructor(private val productDatabase: ProductDa
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
+    //The observable.create is a workaround for room restriction on return types (no observables allowed)
     fun removeProductFromBasket(product: Product): Observable<Any> {
         return Observable.create { subscriber: ObservableEmitter<Any> ->
             productDatabase.productsDAO().deleteProduct(product)

@@ -6,6 +6,9 @@ import io.reactivex.Flowable
 
 @Dao
 interface ProductsDAO {
+
+    //All return types would've been observables if it were allowed by room.
+
     @Query("select * from products")
     fun getProducts(): Flowable<List<Product>>
 

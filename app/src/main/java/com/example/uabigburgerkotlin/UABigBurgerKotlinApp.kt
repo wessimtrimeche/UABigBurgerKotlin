@@ -17,17 +17,19 @@ class UABigBurgerKotlinApp : Application() {
     override fun onCreate() {
         super.onCreate()
         initStethoMonitoring()
-        uaBigBurgerAppComponent = DaggerUABigBurgerAppComponent.builder()
-            .contextModule(ContextModule(this))
-            .build()
-        uaBigBurgerAppComponent.inject(this)
-
+        injectDependencies()
     }
-
 
     private fun initStethoMonitoring() {
         if (BuildConfig.DEBUG)
             Stetho.initializeWithDefaults(this)
+    }
+
+    private fun injectDependencies() {
+        uaBigBurgerAppComponent = DaggerUABigBurgerAppComponent.builder()
+            .contextModule(ContextModule(this))
+            .build()
+        uaBigBurgerAppComponent.inject(this)
     }
 
 }

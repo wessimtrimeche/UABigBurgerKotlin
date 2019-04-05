@@ -12,7 +12,7 @@ import android.widget.Toast
 import com.example.uabigburgerkotlin.R
 import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
 import com.example.uabigburgerkotlin.data.local.model.Product
-import com.example.uabigburgerkotlin.data.provider.SharedPreferencesProvider
+import com.example.uabigburgerkotlin.data.local.provider.SharedPreferencesProvider
 import com.example.uabigburgerkotlin.module.adapter.BasketAdapter
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_product_basket.*

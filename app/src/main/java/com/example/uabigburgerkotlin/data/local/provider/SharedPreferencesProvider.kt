@@ -1,4 +1,4 @@
-package com.example.uabigburgerkotlin.data.provider
+package com.example.uabigburgerkotlin.data.local.provider
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -13,7 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.uabigburgerkotlin.R
 import com.example.uabigburgerkotlin.UABigBurgerKotlinApp
 import com.example.uabigburgerkotlin.data.local.model.Product
-import com.example.uabigburgerkotlin.data.provider.SharedPreferencesProvider
+import com.example.uabigburgerkotlin.data.local.provider.SharedPreferencesProvider
 import com.example.uabigburgerkotlin.data.remote.model.CatalogProductModel
 import com.example.uabigburgerkotlin.module.productbasket.ProductBasketActivity
 import com.google.gson.Gson

@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataManager @Inject constructor(private val apiCalls: APICalls) {
+class DataManager @Inject constructor(val apiCalls: APICalls) {
 
 
     fun getCatalogProducts(): Observable<MutableList<CatalogProductModel>> {
